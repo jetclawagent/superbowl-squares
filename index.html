@@ -2,195 +2,284 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Super Bowl Squares</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1e3a8a 0%, #065f46 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             min-height: 100vh;
-            padding: 20px;
-            color: #333;
+            padding: 16px;
+            color: #1e293b;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 100%;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 24px 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
         }
 
         h1 {
             text-align: center;
-            color: #1e3a8a;
-            margin-bottom: 20px;
-            font-size: 2em;
+            background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .controls {
             display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-            align-items: center;
-            justify-content: center;
+            gap: 12px;
+            flex-direction: column;
+            margin-bottom: 24px;
+        }
+
+        .team-row {
+            display: flex;
+            gap: 12px;
         }
 
         .team-input {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         input[type="text"], input[type="number"] {
-            padding: 10px;
-            border: 2px solid #e5e7eb;
-            border-radius: 6px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            font-weight: 500;
+            transition: all 0.2s;
+            background: #f8fafc;
         }
 
-        input[type="text"]:focus, input[type="number]:focus {
+        input[type="text"]:focus, input[type="number"]:focus {
             outline: none;
-            border-color: #1e3a8a;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         button {
-            padding: 10px 20px;
-            background: #1e3a8a;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
-        button:hover {
-            background: #1e40af;
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .score-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
         }
 
         .score-input {
+            flex: 1;
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            gap: 6px;
         }
 
         .score-input input {
-            width: 80px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .vs {
+            font-size: 20px;
+            font-weight: 700;
+            color: #94a3b8;
+            padding-bottom: 12px;
         }
 
         .grid-container {
-            display: inline-block;
-            margin: 0 auto;
-            position: relative;
             overflow-x: auto;
-            width: 100%;
+            overflow-y: hidden;
+            margin: 0 -16px;
+            padding: 0 16px 16px 16px;
+            -webkit-overflow-scrolling: touch;
         }
 
         .grid-wrapper {
             display: inline-block;
-            min-width: 550px;
+            min-width: 100%;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: 40px repeat(10, 1fr);
-            grid-template-rows: 40px repeat(10, 1fr);
+            grid-template-columns: 36px repeat(10, minmax(50px, 1fr));
+            grid-template-rows: 36px repeat(10, minmax(50px, 1fr));
             gap: 2px;
-            background: #e5e7eb;
+            background: #e2e8f0;
             padding: 2px;
-            border-radius: 8px;
+            border-radius: 12px;
+            margin: 0 auto;
+            max-width: 650px;
         }
 
         .cell {
             background: white;
-            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-            padding: 5px;
+            transition: all 0.15s ease;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px;
             word-wrap: break-word;
             text-align: center;
+            border-radius: 4px;
+            user-select: none;
+            -webkit-user-select: none;
+            position: relative;
         }
 
-        .cell:hover {
-            background: #f3f4f6;
+        .cell:active {
+            transform: scale(0.95);
         }
 
         .cell.winner {
-            background: #fef3c7 !important;
-            font-weight: bold;
-            box-shadow: inset 0 0 0 3px #f59e0b;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.5);
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .header-cell {
-            background: #1e3a8a;
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
             color: white;
-            font-weight: bold;
+            font-weight: 700;
             cursor: default;
             font-size: 16px;
+            box-shadow: 0 2px 8px rgba(30, 58, 138, 0.3);
         }
 
-        .header-cell:hover {
-            background: #1e3a8a;
+        .header-cell:active {
+            transform: none;
         }
 
         .corner-cell {
-            background: #065f46;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             cursor: default;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.5);
         }
 
-        .corner-cell:hover {
-            background: #065f46;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.5em;
-            }
-
-            .controls {
-                flex-direction: column;
-            }
-
-            input[type="text"], input[type="number"] {
-                width: 100%;
-            }
-
-            .cell {
-                min-height: 40px;
-                font-size: 12px;
-            }
-
-            .grid {
-                grid-template-columns: 30px repeat(10, 1fr);
-                grid-template-rows: 30px repeat(10, 1fr);
-            }
+        .corner-cell:active {
+            transform: none;
         }
 
         .legend {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f9fafb;
-            border-radius: 8px;
-            text-align: center;
+            margin-top: 24px;
+            padding: 16px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
         }
 
         .legend p {
-            margin: 5px 0;
-            color: #6b7280;
+            margin: 8px 0;
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .legend strong {
+            color: #1e293b;
+        }
+
+        .highlight-demo {
+            display: inline-block;
+            padding: 4px 8px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .grid {
+                grid-template-columns: 32px repeat(10, minmax(44px, 1fr));
+                grid-template-rows: 32px repeat(10, minmax(44px, 1fr));
+            }
+
+            .cell {
+                font-size: 11px;
+            }
+
+            .header-cell {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                padding: 32px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+                margin-bottom: 32px;
+            }
+
+            .controls {
+                gap: 16px;
+            }
+
+            .team-row, .score-row {
+                flex-direction: row;
+            }
         }
     </style>
 </head>
@@ -199,24 +288,35 @@
         <h1>🏈 Super Bowl Squares</h1>
 
         <div class="controls">
-            <div class="team-input">
-                <label>Team 1:</label>
-                <input type="text" id="team1" value="Team 1">
+            <div class="team-row">
+                <div class="team-input">
+                    <label>Team 1</label>
+                    <input type="text" id="team1" value="Team 1">
+                </div>
+
+                <div class="team-input">
+                    <label>Team 2</label>
+                    <input type="text" id="team2" value="Team 2">
+                </div>
             </div>
 
-            <div class="team-input">
-                <label>Team 2:</label>
-                <input type="text" id="team2" value="Team 2">
+            <button onclick="assignNumbers()">🎲 Assign Random Numbers</button>
+
+            <div class="score-row">
+                <div class="score-input">
+                    <label>Score 1</label>
+                    <input type="number" id="score1" placeholder="0" min="0">
+                </div>
+
+                <div class="vs">VS</div>
+
+                <div class="score-input">
+                    <label>Score 2</label>
+                    <input type="number" id="score2" placeholder="0" min="0">
+                </div>
             </div>
 
-            <button onclick="assignNumbers()">🎲 Assign Numbers</button>
-
-            <div class="score-input">
-                <input type="number" id="score1" placeholder="Score 1" min="0">
-                <span>-</span>
-                <input type="number" id="score2" placeholder="Score 2" min="0">
-                <button onclick="updateScores()">Update Scores</button>
-            </div>
+            <button onclick="updateScores()">✅ Find Winner</button>
         </div>
 
         <div class="grid-container">
@@ -226,8 +326,11 @@
         </div>
 
         <div class="legend">
-            <p><strong>How to play:</strong> Click a square to add your name. Numbers will be randomly assigned after all squares are filled (or click "Assign Numbers"). The winner is determined by the last digit of each team's score.</p>
-            <p>🟡 Gold highlight shows the current winning square</p>
+            <p><strong>How to play:</strong></p>
+            <p>1️⃣ Tap any square to add your name<br>
+            2️⃣ Hit "Assign Random Numbers" to generate row/column numbers<br>
+            3️⃣ Enter the scores and tap "Find Winner"</p>
+            <p><span class="highlight-demo">Winner</span> is highlighted based on the last digit of each score</p>
         </div>
     </div>
 
@@ -275,8 +378,6 @@
                     grid.appendChild(cell);
                 }
             }
-
-            updateTeamNames();
         }
 
         function assignNumbers() {
@@ -296,14 +397,9 @@
         function editSquare(index) {
             const name = prompt('Enter player name:', squares[index] || '');
             if (name !== null) {
-                squares[index] = name;
-                document.getElementById(`cell-${index}`).textContent = name;
+                squares[index] = name.trim();
+                document.getElementById(`cell-${index}`).textContent = squares[index];
             }
-        }
-
-        function updateTeamNames() {
-            const team1 = document.getElementById('team1').value;
-            const team2 = document.getElementById('team2').value;
         }
 
         function updateScores() {
@@ -317,7 +413,7 @@
             document.querySelectorAll('.cell').forEach(cell => cell.classList.remove('winner'));
 
             if (colNumbers.length === 0 || rowNumbers.length === 0) {
-                alert('Please assign numbers first!');
+                alert('⚠️ Please assign numbers first!');
                 return;
             }
 
@@ -330,14 +426,25 @@
                 const winningCell = document.getElementById(`cell-${winningIndex}`);
                 if (winningCell) {
                     winningCell.classList.add('winner');
+                    const winnerName = squares[winningIndex];
+                    if (winnerName) {
+                        setTimeout(() => {
+                            alert(`🎉 Winner: ${winnerName}!`);
+                        }, 300);
+                    }
                 }
             }
         }
 
-        // Initialize on load
-        document.getElementById('team1').addEventListener('change', updateTeamNames);
-        document.getElementById('team2').addEventListener('change', updateTeamNames);
+        // Auto-update scores when Enter is pressed
+        document.getElementById('score1').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') updateScores();
+        });
+        document.getElementById('score2').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') updateScores();
+        });
 
+        // Initialize on load
         initGrid();
     </script>
 </body>
